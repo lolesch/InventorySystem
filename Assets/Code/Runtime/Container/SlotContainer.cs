@@ -1,4 +1,5 @@
 using System;
+using Code.Runtime.Container.Items;
 using UnityEngine;
 
 namespace Code.Runtime.Container
@@ -11,31 +12,37 @@ namespace Code.Runtime.Container
 
         public event Action<Package[]> OnContentsChanged;
 
-        public SlotContainer( int size ) => contents = new Package[size];
-
-        public bool TryAdd( Package arrival, int slot, out Package other )
+        protected SlotContainer( int capacity ) => contents = new Package[capacity];
+        
+        public bool TryAdd( ref Package package )
         {
-            other = arrival;
-            
-            if( !arrival.IsValid )
+            if( !package.hasValidItem )
                 return false;
 
-            other = Contents[slot];
+            return TryMerge( ref package ) || TryAddToEmpty( package );
+        }
+        
+        public bool TryAddAt( int slot, ref Package arrival )
+        {
+            if( !arrival.hasValidItem )
+                return false;
 
-            if( Contents[slot].IsValid && TryMerge( ref arrival, slot ) )
-                other = arrival;
-            else
-                Contents[slot] = arrival;
+            if( TryCombineAt( slot, ref arrival ) )
+                return true;
             
-            OnContentsChanged?.Invoke( Contents );
+            if( !CanAddAt( slot, arrival ) )
+                return false;
+
+            SwapAt (slot, ref arrival );
             return true;
         }
 
-        public bool TryRemove( int slot )
-        {
-            if( !Contents[slot].IsValid )
+        public bool TryRemove( int slot )//, out Package removed )
+        {           
+            if( IsValidSlot( slot ) && !Contents[slot].hasValidItem )
                 return false;
 
+            //removed = Contents[slot];
             Contents[slot] = new Package();
             OnContentsChanged?.Invoke( Contents );
             return true;
@@ -43,6 +50,12 @@ namespace Code.Runtime.Container
 
         public bool TryRemove( Package removal )
         {
+            if( !removal.hasValidItem )
+                return false;
+
+            // TODO: TrySplitAt() -> see TryCombineAt() as reference
+            // and iterate over all slots to remove from multiple stacks if necessary
+            
             var slot = Array.FindIndex( Contents, p => p.Item.Equals( removal.Item ) );
             if( slot < 0 )
                 return false;
@@ -50,19 +63,69 @@ namespace Code.Runtime.Container
             if( removal.Amount > Contents[slot].Amount )
                 return false;
             
-            _ = Contents[slot].Reduce( removal.Amount );
+            _ = Contents[slot].Remove( removal.Amount );
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
 
-        private bool TryMerge( ref Package arrival, int slot )
+        //public abstract void UseItemAt( int slot );
+
+        protected virtual void SwapAt( int slot, ref Package arrival )
         {
-            if( !Contents[slot].Item.Equals( arrival.Item ) ) 
+            var previous  = Contents[slot];
+            Contents[slot] = arrival;
+            arrival = previous;
+                
+            OnContentsChanged?.Invoke( Contents );
+        }
+
+        protected virtual bool CanAddAt( int slot, Package arrival ) => IsValidSlot( slot ) && arrival.hasValidItem;
+        
+        private bool TryMerge( ref Package arrival )
+        {
+            if( arrival.Item.stackLimit <= StackLimitType.Single)
                 return false;
             
-            var added = Contents[slot].Increase( arrival.Amount );
-            _ = arrival.Reduce( added );
+            for( var slot = 0; slot < Contents.Length; slot++ )
+            {
+                if( !TryCombineAt( slot, ref arrival ) )
+                    continue;
+
+                if( 0 < arrival.Amount ) 
+                    continue;
+                
+                arrival = new Package();
+                OnContentsChanged?.Invoke( Contents );
+                return true;
+            }
+            return false;
+        }
+        
+        private bool TryCombineAt( int slot, ref Package arrival )
+        {
+            if( IsEmpty( slot ) || !Contents[slot].Item.Equals( arrival.Item ) || !Contents[slot].hasSpace )
+                return false;
+            
+            var added = Contents[slot].Add( arrival.Amount );
+            _ = arrival.Remove( added );
+            
+            OnContentsChanged?.Invoke( Contents );
             return true;
         }
-    }
+        
+        private bool TryAddToEmpty( Package arrival )
+        {
+            for( var slot = 0; slot < Contents.Length; slot++ )
+            {
+                if( !IsEmpty( slot ) ) 
+                    continue;
+         
+                if( TryAddAt( slot, ref arrival ) )
+                    return true;
+            }
+            return false;
+        }
+        
+        private bool IsEmpty( int slot ) => IsValidSlot( slot) && !Contents[slot].hasValidItem;
+        private bool IsValidSlot( int slot ) => 0 <= slot && slot < Contents.Length;}
 }

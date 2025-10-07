@@ -8,10 +8,10 @@ namespace Code.Runtime.Container
         // AbstractContainer Sender { get; }
         AbstractItem Item { get; }
         uint Amount { get; }
-        bool IsValid { get; }
-        uint SpaceLeft { get; }
+        bool hasValidItem { get; }
+        uint spaceLeft { get; }
         
-        uint Increase( uint amountToAdd );
-        uint Reduce( uint amountToRemove );
+        uint Add( uint amountToAdd );
+        uint Remove( uint amountToRemove );
     }
 }

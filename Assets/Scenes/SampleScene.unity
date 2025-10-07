@@ -461,18 +461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d8942ca9cff4a16a1c376984ec401c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Runtime.Pawn
-  testModifier:
-    value: 0
-    type: 0
-    source:
-      underlyingValue: {fileID: 1416528882}
   itemData:
     underlyingValue: {fileID: 11400000, guid: 49ca9e894c4f16849915e74d93fbb3db, type: 2}
-  infinite:
-    contents:
-    - <Amount>k__BackingField: 0
-    - <Amount>k__BackingField: 0
-    - <Amount>k__BackingField: 0
 --- !u!4 &1416528883
 Transform:
   m_ObjectHideFlags: 0

@@ -6,13 +6,6 @@ using UnityEngine;
 
 namespace Code.Runtime.Container
 {
-    // INVENTORY TYPES:
-    // 1. infinite -> add/stack/remove
-    // 2. finite slots -> swap item at slot
-    // 2.1 slot -> 1 slot per item (i.e. equipment -> enum based)
-    // 2.2 grid -> multiple slots per item (i.e. backpack)
-    // 3. finite weight
-
     [Serializable]
     public sealed class InfiniteContainer : IInfiniteContainer
     {
@@ -23,7 +16,7 @@ namespace Code.Runtime.Container
 
         public void Add( Package arrival )
         {
-            if( !arrival.IsValid )
+            if( !arrival.hasValidItem )
                 return;
 
             if( !Merge( ref arrival ) )
@@ -45,10 +38,10 @@ namespace Code.Runtime.Container
         {
             for( var i = 0; i < Contents.Count && 0 < arrival.Amount; i++ )
             {
-                if( Contents[i].Item.Equals( arrival.Item ) && 0 < Contents[i].SpaceLeft )
+                if( Contents[i].Item.Equals( arrival.Item ) )
                 {
-                    var added = Contents[i].Increase( arrival.Amount );
-                    _ = arrival.Reduce( added );
+                    var added = Contents[i].Add( arrival.Amount );
+                    _ = arrival.Remove( added );
                 }
             }
 

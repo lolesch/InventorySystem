@@ -10,24 +10,25 @@ namespace Code.Runtime.Container
         [field: SerializeField] public AbstractItem Item { get; private set; }
         [field: SerializeField] public uint Amount { get;  private set; }
 
-        public Package( AbstractItem item, uint amount )
+        public Package( AbstractItem item, uint amount = 1 )
         {
             Item = item;
             Amount = amount;
         }
 
-        public bool IsValid => Item != null && 0 < Amount;
-        public uint SpaceLeft => Math.Clamp( (uint)Item.stackLimit - Amount, 0, (uint)Item.stackLimit );
+        public bool hasValidItem => Item != null && 0 < Amount;
+        public uint spaceLeft => Math.Clamp( (uint)Item.stackLimit - Amount, 0, (uint)Item.stackLimit );
+        public bool hasSpace => 0 < spaceLeft;
 
-        public uint Increase( uint amount )
+        public uint Add( uint amount )
         {
-            var increase = Math.Min(SpaceLeft, amount);
+            var increase = Math.Min(spaceLeft, amount);
             Amount += increase;
 
             return increase;
         }
 
-        public uint Reduce( uint amount )
+        public uint Remove( uint amount )
         {
             var decrease = Math.Min(Amount, amount);
             Amount -= decrease;

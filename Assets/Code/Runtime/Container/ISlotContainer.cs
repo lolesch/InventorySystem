@@ -4,10 +4,13 @@ namespace Code.Runtime.Container
 {
     public interface ISlotContainer
     {
-        Package[] Contents { get; }
-        event Action<Package[]> OnContentsChanged;
-        bool TryAdd( Package arrival, int slot, out Package other );
+        public Package[] Contents { get; }
+        public event Action<Package[]> OnContentsChanged;
+        bool TryAdd( ref Package package );
+        bool TryAddAt( int slot, ref Package arrival );
+
         bool TryRemove( int slot );
+
         bool TryRemove( Package removal );
     }
 }

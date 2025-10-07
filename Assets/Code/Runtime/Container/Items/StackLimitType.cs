@@ -3,7 +3,7 @@ using System;
 namespace Code.Runtime.Container.Items
 {
     [Serializable]
-    public enum StackLimit : byte
+    public enum StackLimitType : byte
     {
         Single = 1,
         StackOfTen = 10,

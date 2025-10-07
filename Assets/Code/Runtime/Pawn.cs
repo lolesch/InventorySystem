@@ -8,14 +8,14 @@ namespace Code.Runtime
 {
     public sealed class Pawn : MonoBehaviour, IModifierSource
     {
-        [SerializeField] private Modifier testModifier;
         [SerializeField] private InterfaceReference<IItemData> itemData;
-        [SerializeField] private InfiniteContainer infinite;
-        [SerializeField] private EnumSlotContainer<StackLimit> enumSlotContainer = new();
+        [SerializeField] private EnumSlotContainer<EquipmentType> Equipment;
 
-        private void Start()
+        private void OnValidate()
         {
-            
+            var package = new Package( new EquipmentItem( itemData.Value, EquipmentType.Accessory ), 1 );
+            Equipment.TryAdd( ref package );
+            Equipment.TryRemove( EquipmentType.Accessory );
         }
     }
 }
