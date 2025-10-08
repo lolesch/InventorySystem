@@ -22,7 +22,7 @@ namespace Code.Runtime.Container
             return TryAddAt( slot, ref arrival );
         }
 
-        public bool TryRemove( T slot ) => TryRemove( ToInt( slot ) );
+        public bool TryRemove( T slot, out Package removed ) => TryRemove( ToInt( slot ), out removed );
 
         private int ToInt( T slot ) => Array.IndexOf( Enum.GetValues( typeof( T ) ), slot );
     }

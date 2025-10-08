@@ -16,8 +16,6 @@ namespace Code.Runtime.Container.Items
         public override void Use() => throw new NotImplementedException();
 
         public override void Revert() => throw new NotImplementedException();
-
-        public override List<Vector2Int> GetShape() => new List<Vector2Int>() { Vector2Int.zero };
     }
 
     public interface IWeightItem

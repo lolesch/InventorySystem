@@ -36,8 +36,16 @@ namespace Code.Runtime.Container.Items
 
         public override int GetHashCode() => HashCode.Combine( ItemData, guid, stackLimit );
         
-        // review! this should return all required slots
-        protected virtual List<int> GetPointers( int slot ) => new() { slot };
+        // refactor? used only in GridContainer -> have an AbstractGridItem for this?
+        public virtual List<Vector2Int> GetPointers( Vector2Int position, RotationType rotation ) => new() { position };
+    }
+
+    [Serializable]
+    public abstract class AbstractGridItem : AbstractItem
+    {
+        protected AbstractGridItem( IItemData itemData, StackLimitType stackLimit ) : base( itemData, stackLimit )
+        {
+        }
     }
     
     public interface IItemData

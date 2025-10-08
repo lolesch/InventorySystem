@@ -9,8 +9,20 @@ namespace Code.Runtime.Container
         bool TryAdd( ref Package package );
         bool TryAddAt( int slot, ref Package arrival );
 
-        bool TryRemove( int slot );
+        bool TryRemove( int slot, out Package removed );
 
         bool TryRemove( Package removal );
+    }
+    
+    public interface IGridContainer
+    {
+        public Package[] Contents { get; }
+        public event Action<Package[]> OnContentsChanged;
+        bool TryAdd( ref Package package );
+        bool TryAddAt( int slot, ref Package arrival );
+
+        bool TryRemove( int slot, out Package removed );
+
+        bool TryRemove( Package remaining );
     }
 }

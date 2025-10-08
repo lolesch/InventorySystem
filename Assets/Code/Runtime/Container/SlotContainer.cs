@@ -7,12 +7,11 @@ namespace Code.Runtime.Container
     [Serializable]
     public abstract class SlotContainer : ISlotContainer
     {
-        [SerializeField] private Package[] contents;
-        public Package[] Contents => contents;
+        [field: SerializeField] public Package[] Contents { get; private set; }
 
         public event Action<Package[]> OnContentsChanged;
 
-        protected SlotContainer( int capacity ) => contents = new Package[capacity];
+        protected SlotContainer( int capacity ) => Contents = new Package[capacity];
         
         public bool TryAdd( ref Package package )
         {
@@ -24,26 +23,27 @@ namespace Code.Runtime.Container
         
         public bool TryAddAt( int slot, ref Package arrival )
         {
-            if( !arrival.hasValidItem )
+            if( !arrival.hasValidItem || !IsValidSlot( slot ) )
                 return false;
 
             if( TryCombineAt( slot, ref arrival ) )
                 return true;
-            
-            if( !CanAddAt( slot, arrival ) )
-                return false;
 
             SwapAt (slot, ref arrival );
             return true;
         }
 
-        public bool TryRemove( int slot )//, out Package removed )
-        {           
-            if( IsValidSlot( slot ) && !Contents[slot].hasValidItem )
+        public bool TryRemove( int slot, out Package removed )
+        {
+            if( IsEmpty( slot ) )
+            {
+                removed = new Package();
                 return false;
+            }
 
-            //removed = Contents[slot];
+            removed = Contents[slot];
             Contents[slot] = new Package();
+            
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
@@ -70,7 +70,7 @@ namespace Code.Runtime.Container
 
         //public abstract void UseItemAt( int slot );
 
-        protected virtual void SwapAt( int slot, ref Package arrival )
+        private void SwapAt( int slot, ref Package arrival )
         {
             var previous  = Contents[slot];
             Contents[slot] = arrival;
@@ -78,8 +78,6 @@ namespace Code.Runtime.Container
                 
             OnContentsChanged?.Invoke( Contents );
         }
-
-        protected virtual bool CanAddAt( int slot, Package arrival ) => IsValidSlot( slot ) && arrival.hasValidItem;
         
         private bool TryMerge( ref Package arrival )
         {
