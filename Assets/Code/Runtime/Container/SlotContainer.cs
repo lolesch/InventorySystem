@@ -7,21 +7,21 @@ namespace Code.Runtime.Container
     [Serializable]
     public abstract class SlotContainer : ISlotContainer
     {
-        [field: SerializeField] public Package[] Contents { get; private set; }
+        [field: SerializeField] public ItemStack[] Contents { get; private set; }
 
-        public event Action<Package[]> OnContentsChanged;
+        public event Action<ItemStack[]> OnContentsChanged;
 
-        protected SlotContainer( int capacity ) => Contents = new Package[capacity];
+        protected SlotContainer( int capacity ) => Contents = new ItemStack[capacity];
         
-        public bool TryAdd( ref Package package )
+        public bool TryAdd( ref ItemStack itemStack )
         {
-            if( !package.hasValidItem )
+            if( !itemStack.hasValidItem )
                 return false;
 
-            return TryMerge( ref package ) || TryAddToEmpty( package );
+            return TryMerge( ref itemStack ) || TryAddToEmpty( itemStack );
         }
         
-        public bool TryAddAt( int slot, ref Package arrival )
+        public bool TryAddAt( int slot, ref ItemStack arrival )
         {
             if( !arrival.hasValidItem || !IsValidSlot( slot ) )
                 return false;
@@ -33,22 +33,22 @@ namespace Code.Runtime.Container
             return true;
         }
 
-        public bool TryRemove( int slot, out Package removed )
+        public bool TryRemove( int slot, out ItemStack removed )
         {
             if( IsEmpty( slot ) )
             {
-                removed = new Package();
+                removed = new ItemStack();
                 return false;
             }
 
             removed = Contents[slot];
-            Contents[slot] = new Package();
+            Contents[slot] = new ItemStack();
             
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
 
-        public bool TryRemove( Package removal )
+        public bool TryRemove( ItemStack removal )
         {
             if( !removal.hasValidItem )
                 return false;
@@ -70,7 +70,7 @@ namespace Code.Runtime.Container
 
         //public abstract void UseItemAt( int slot );
 
-        private void SwapAt( int slot, ref Package arrival )
+        private void SwapAt( int slot, ref ItemStack arrival )
         {
             var previous  = Contents[slot];
             Contents[slot] = arrival;
@@ -79,7 +79,7 @@ namespace Code.Runtime.Container
             OnContentsChanged?.Invoke( Contents );
         }
         
-        private bool TryMerge( ref Package arrival )
+        private bool TryMerge( ref ItemStack arrival )
         {
             if( arrival.Item.stackLimit <= StackLimitType.Single)
                 return false;
@@ -92,14 +92,14 @@ namespace Code.Runtime.Container
                 if( 0 < arrival.Amount ) 
                     continue;
                 
-                arrival = new Package();
+                arrival = new ItemStack();
                 OnContentsChanged?.Invoke( Contents );
                 return true;
             }
             return false;
         }
         
-        private bool TryCombineAt( int slot, ref Package arrival )
+        private bool TryCombineAt( int slot, ref ItemStack arrival )
         {
             if( IsEmpty( slot ) || !Contents[slot].Item.Equals( arrival.Item ) || !Contents[slot].hasSpace )
                 return false;
@@ -111,7 +111,7 @@ namespace Code.Runtime.Container
             return true;
         }
         
-        private bool TryAddToEmpty( Package arrival )
+        private bool TryAddToEmpty( ItemStack arrival )
         {
             for( var slot = 0; slot < Contents.Length; slot++ )
             {

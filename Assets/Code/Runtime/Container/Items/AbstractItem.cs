@@ -24,17 +24,6 @@ namespace Code.Runtime.Container.Items
 
         public abstract void Use();
         public abstract void Revert();
-
-        public bool Equals( AbstractItem other )
-        {
-            if( other is null ) 
-                return false;
-            if( ReferenceEquals( this, other ) ) 
-                return true;
-            return GetHashCode() == other.GetHashCode();
-        }
-
-        public override int GetHashCode() => HashCode.Combine( ItemData, guid, stackLimit );
         
         // refactor? used only in GridContainer -> have an AbstractGridItem for this?
         public virtual List<Vector2Int> GetPointers( Vector2Int position, RotationType rotation ) => new() { position };
@@ -56,7 +45,7 @@ namespace Code.Runtime.Container.Items
         //[field: SerializeField] public Sprite icon { get; }
     }
     
-    public interface IItem : IEquatable<AbstractItem> // : IItemData
+    public interface IItem //: IEquatable<AbstractItem> // : IItemData
     {
         Guid guid { get; }
         StackLimitType stackLimit { get; }

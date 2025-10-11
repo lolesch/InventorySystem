@@ -3,15 +3,15 @@ using Code.Runtime.Container.Items;
 
 namespace Code.Runtime.Container
 {
-    public interface IPackage: IEquatable<Package>
+    public interface IItemStack: IEquatable<ItemStack>
     {
         // AbstractContainer Sender { get; }
         AbstractItem Item { get; }
-        uint Amount { get; }
+        int Amount { get; }
         bool hasValidItem { get; }
-        uint spaceLeft { get; }
+        int spaceLeft { get; }
         
-        uint Add( uint amountToAdd );
-        uint Remove( uint amountToRemove );
+        int Add( int amountToAdd );
+        int Remove( int amountToRemove );
     }
 }

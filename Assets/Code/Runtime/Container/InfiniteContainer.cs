@@ -9,12 +9,12 @@ namespace Code.Runtime.Container
     [Serializable]
     public sealed class InfiniteContainer : IInfiniteContainer
     {
-        [SerializeField] private List<Package> contents = new();
+        [SerializeField] private List<ItemStack> contents = new();
 
-        public List<Package> Contents => contents;
-        public event Action<List<Package>> OnContentsChanged;
+        public List<ItemStack> Contents => contents;
+        public event Action<List<ItemStack>> OnContentsChanged;
 
-        public void Add( Package arrival )
+        public void Add( ItemStack arrival )
         {
             if( !arrival.hasValidItem )
                 return;
@@ -25,16 +25,16 @@ namespace Code.Runtime.Container
             OnContentsChanged?.Invoke( Contents );
         }
 
-        public bool TryRemove( Package package )
+        public bool TryRemove( ItemStack itemStack )
         {
-            if( !Contents.Remove( package ) )
+            if( !Contents.Remove( itemStack ) )
                 return false;
 
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
 
-        private bool Merge( ref Package arrival )
+        private bool Merge( ref ItemStack arrival )
         {
             for( var i = 0; i < Contents.Count && 0 < arrival.Amount; i++ )
             {

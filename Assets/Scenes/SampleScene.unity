@@ -463,6 +463,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Runtime.Pawn
   itemData:
     underlyingValue: {fileID: 11400000, guid: 49ca9e894c4f16849915e74d93fbb3db, type: 2}
+  Equipment:
+    <Contents>k__BackingField:
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
+    - <Amount>k__BackingField: 0
 --- !u!4 &1416528883
 Transform:
   m_ObjectHideFlags: 0

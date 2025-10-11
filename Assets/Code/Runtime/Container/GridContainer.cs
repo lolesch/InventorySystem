@@ -9,27 +9,27 @@ namespace Code.Runtime.Container
     [Serializable]
     public class GridContainer : IGridContainer
     {
-        [field: SerializeField] public Package[] Contents { get; private set; }
+        [field: SerializeField] public ItemStack[] Contents { get; private set; }
 
-        public event Action<Package[]> OnContentsChanged;
+        public event Action<ItemStack[]> OnContentsChanged;
         public GridContainer( Vector2Int dimensions )
         {
             Dimensions = dimensions;
-            Contents = new Package[dimensions.x * dimensions.y];
+            Contents = new ItemStack[dimensions.x * dimensions.y];
         }
 
         public readonly Vector2Int Dimensions;
 
         private Dictionary<Vector2Int, int> _gridPointer = new();
         
-        public bool TryAdd( ref Package package )
+        public bool TryAdd( ref ItemStack itemStack )
         {
-            if( !package.hasValidItem )
+            if( !itemStack.hasValidItem )
                 return false;
 
-            return TryMerge( ref package ) || TryAddToEmpty( package );
+            return TryMerge( ref itemStack ) || TryAddToEmpty( itemStack );
         }
-        public bool TryAddAt( int slot, ref Package arrival )
+        public bool TryAddAt( int slot, ref ItemStack arrival )
         {
             if( !CanAddAt( slot , arrival, out var other ) )
                 return false;
@@ -45,16 +45,16 @@ namespace Code.Runtime.Container
             SwapAt (slot, ref arrival, slot );
             return true;
         }
-        public bool TryRemove( int slot, out Package removed )
+        public bool TryRemove( int slot, out ItemStack removed )
         {
             if( IsEmpty( slot ) )
             {
-                removed = new Package();
+                removed = new ItemStack();
                 return false;
             }
 
             removed = Contents[slot];
-            Contents[slot] = new Package();
+            Contents[slot] = new ItemStack();
             var pointers = removed.Item.GetPointers( ToPosition( slot ), RotationType.Deg0 );
             foreach( var pointer in pointers )
                 _gridPointer.Remove( pointer );
@@ -62,7 +62,7 @@ namespace Code.Runtime.Container
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
-        public bool TryRemove( Package remaining )
+        public bool TryRemove( ItemStack remaining )
         {
             if( !remaining.hasValidItem )
                 return false;
@@ -82,7 +82,7 @@ namespace Code.Runtime.Container
             return false;
         }
         
-        private bool TryUnmerge( ref Package remaining )
+        private bool TryUnmerge( ref ItemStack remaining )
         {
             if( remaining.Item.stackLimit <= StackLimitType.Single)
                 return false;
@@ -95,13 +95,13 @@ namespace Code.Runtime.Container
                 if( 0 < remaining.Amount ) 
                     continue;
                 
-                remaining = new Package();
+                remaining = new ItemStack();
                 //OnContentsChanged?.Invoke( Contents ); // already invoked in TrySplitAt
                 return true;
             }
             return false;
         }
-        private bool TrySplitAt( int slot, ref Package remaining )
+        private bool TrySplitAt( int slot, ref ItemStack remaining )
         {
             if( IsEmpty( slot ) || !Contents[slot].Item.Equals( remaining.Item ) )
                 return false;
@@ -112,7 +112,7 @@ namespace Code.Runtime.Container
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
-        private bool TryMerge( ref Package arrival )
+        private bool TryMerge( ref ItemStack arrival )
         {
             if( arrival.Item.stackLimit <= StackLimitType.Single)
                 return false;
@@ -125,13 +125,13 @@ namespace Code.Runtime.Container
                 if( 0 < arrival.Amount ) 
                     continue;
                 
-                arrival = new Package();
+                arrival = new ItemStack();
                 //OnContentsChanged?.Invoke( Contents ); // already invoked in TryCombineAt
                 return true;
             }
             return false;
         }
-        private bool TryCombineAt( int slot, ref Package arrival )
+        private bool TryCombineAt( int slot, ref ItemStack arrival )
         {
             if( IsEmpty( slot ) || !Contents[slot].Item.Equals( arrival.Item ) || !Contents[slot].hasSpace )
                 return false;
@@ -142,7 +142,7 @@ namespace Code.Runtime.Container
             OnContentsChanged?.Invoke( Contents );
             return true;
         }
-        private bool TryAddToEmpty( Package arrival )
+        private bool TryAddToEmpty( ItemStack arrival )
         {
             for( var slot = 0; slot < Contents.Length; slot++ )
             {
@@ -154,7 +154,7 @@ namespace Code.Runtime.Container
             }
             return false;
         }
-        private void SwapAt( int slot, ref Package arrival, int other )
+        private void SwapAt( int slot, ref ItemStack arrival, int other )
         {
             _ = TryRemove( other, out var removed );
             
@@ -166,7 +166,7 @@ namespace Code.Runtime.Container
                 
             OnContentsChanged?.Invoke( Contents );
         }
-        private bool CanAddAt( int slot, Package arrival, out List<int> other )
+        private bool CanAddAt( int slot, ItemStack arrival, out List<int> other )
         {
             other = new List<int>();
             
@@ -179,11 +179,11 @@ namespace Code.Runtime.Container
         }
         private int ToSlot( Vector2Int position ) => position.x + position.y * Dimensions.x;
         private Vector2Int ToPosition( int slot ) => new( slot % Dimensions.x, slot / Dimensions.x );
-        private List<int> GetOverlappingItems( Vector2Int position, Package package )
+        private List<int> GetOverlappingItems( Vector2Int position, ItemStack itemStack )
         {
             var slots = new List<int>();
             
-            var pointers = package.Item.GetPointers( position, RotationType.Deg0 );
+            var pointers = itemStack.Item.GetPointers( position, RotationType.Deg0 );
             
             foreach( var pointer in pointers )
             {

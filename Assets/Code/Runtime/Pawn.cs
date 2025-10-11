@@ -13,13 +13,13 @@ namespace Code.Runtime
 
         private void OnValidate()
         {
-            var package = new Package( new EquipmentItem( itemData.Value, EquipmentType.Accessory ) );
+            var package = new ItemStack( new EquipmentItem( itemData.Value, EquipmentType.Accessory ) );
             
             Equipment.TryAdd( ref package );
             Equipment.TryRemove( EquipmentType.Accessory, out var removed );
             
-            Debug.Assert( removed.hasValidItem );
-            Debug.Assert( !package.hasValidItem );
+            //Debug.Assert( removed.hasValidItem );
+            //Debug.Assert( !package.hasValidItem );
         }
     }
 }

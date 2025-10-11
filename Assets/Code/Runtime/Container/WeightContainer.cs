@@ -9,14 +9,14 @@ namespace Code.Runtime.Container
     [Serializable]
     internal sealed class WeightContainer
     {
-        [SerializeField] private List<Package> contents;
-        public List<Package> Contents => contents;
-        public event Action<List<Package>> OnContentsChanged;
+        [SerializeField] private List<ItemStack> contents;
+        public List<ItemStack> Contents => contents;
+        public event Action<List<ItemStack>> OnContentsChanged;
         public readonly int MaxLoad;
         // instead of summing every time, keep track of current weight and update on add/remove
         public float Weight => contents.Sum( package => package.Amount * ( package.Item as IWeightItem ).weight );
         private bool CanAdd( float weight ) => weight + Weight <= MaxLoad;
-        private bool CanAdd( Package package ) => CanAdd( (package.Item as IWeightItem ).weight );
+        private bool CanAdd( ItemStack itemStack ) => CanAdd( (itemStack.Item as IWeightItem ).weight );
 
         internal WeightContainer( int maxLoad ) 
         {

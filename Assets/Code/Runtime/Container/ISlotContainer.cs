@@ -4,25 +4,25 @@ namespace Code.Runtime.Container
 {
     public interface ISlotContainer
     {
-        public Package[] Contents { get; }
-        public event Action<Package[]> OnContentsChanged;
-        bool TryAdd( ref Package package );
-        bool TryAddAt( int slot, ref Package arrival );
+        public ItemStack[] Contents { get; }
+        public event Action<ItemStack[]> OnContentsChanged;
+        bool TryAdd( ref ItemStack itemStack );
+        bool TryAddAt( int slot, ref ItemStack arrival );
 
-        bool TryRemove( int slot, out Package removed );
+        bool TryRemove( int slot, out ItemStack removed );
 
-        bool TryRemove( Package removal );
+        bool TryRemove( ItemStack removal );
     }
     
     public interface IGridContainer
     {
-        public Package[] Contents { get; }
-        public event Action<Package[]> OnContentsChanged;
-        bool TryAdd( ref Package package );
-        bool TryAddAt( int slot, ref Package arrival );
+        public ItemStack[] Contents { get; }
+        public event Action<ItemStack[]> OnContentsChanged;
+        bool TryAdd( ref ItemStack itemStack );
+        bool TryAddAt( int slot, ref ItemStack arrival );
 
-        bool TryRemove( int slot, out Package removed );
+        bool TryRemove( int slot, out ItemStack removed );
 
-        bool TryRemove( Package remaining );
+        bool TryRemove( ItemStack remaining );
     }
 }

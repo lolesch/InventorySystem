@@ -5,9 +5,9 @@ namespace Code.Runtime.Container
 {
     public interface IInfiniteContainer
     {
-        List<Package> Contents { get; }
-        event Action<List<Package>> OnContentsChanged;
-        void Add( Package arrival );
-        bool TryRemove( Package package );
+        List<ItemStack> Contents { get; }
+        event Action<List<ItemStack>> OnContentsChanged;
+        void Add( ItemStack arrival );
+        bool TryRemove( ItemStack itemStack );
     }
 }
