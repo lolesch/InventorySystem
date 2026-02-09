@@ -1,0 +1,8 @@
+:root {
+    --color-primary: #3498db;
+    --color-secondary: #2ecc71;
+    --color-text: #ffffff;
+    --color-bg: #1e1e1e;
+    
+    --inventory-slot-size: 64px;
+}

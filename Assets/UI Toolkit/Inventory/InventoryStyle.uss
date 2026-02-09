@@ -1,0 +1,63 @@
+.inventory-root {
+    background-color: var(--color-bg);
+    border-radius: 8px;
+    border-width: 2px;
+    border-color: rgb(102, 102, 102);
+    align-items: center;
+    align-self: flex-end;
+    padding: 20px;
+}
+
+.menu-header {
+    font-size: 40px;
+    color: var(--color-text);
+    -unity-font-definition: url("project://database/Assets/Art/Fonts/diablo_h.ttf?fileID=12800000&guid=3d33e23e38fb3c948a095f86a5ed39cb&type=3#diablo_h");
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+.inventory-grid {
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 360px;
+}
+
+.inventory-slot {
+    width: var(--inventory-slot-size);
+    height: var(--inventory-slot-size);
+    margin: 4px;
+}
+
+.ghostIcon {
+    visibility: hidden;
+    width: var(--inventory-slot-size);
+    height: var(--inventory-slot-size);
+}
+
+.slotIcon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.slotFrame {
+    border-width: 2px;
+    border-color: rgb(102, 102, 102);
+    border-radius: 4px;
+    flex-grow: 1;
+    align-items: flex-end;
+    justify-content: flex-end;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.slotAmount {
+    font-size: 18px;
+    color: var(--color-text);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}

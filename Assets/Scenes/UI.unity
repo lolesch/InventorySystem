@@ -188,7 +188,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Runtime.GUI.Inventory.InventoryView
   document: {fileID: 862523912}
-  styleSheet: {fileID: 7433441132597879392, guid: 762f1c6084e6ec043b49cb78253901c1, type: 3}
+  capacity: 20
+  startingItems:
+  - {fileID: 11400000, guid: 23a5447dbb490a54e84fa26f1dfd3e36, type: 2}
+  - {fileID: 11400000, guid: f29c9b703dac0a04a8bbe2e7d5237d12, type: 2}
+  - {fileID: 11400000, guid: 49ca9e894c4f16849915e74d93fbb3db, type: 2}
+  menuName:
+    m_TableReference:
+      m_TableCollectionName: GUID:827d88c5433110c4e915ec038a42f156
+    m_TableEntryReference:
+      m_KeyId: 52872019968
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
